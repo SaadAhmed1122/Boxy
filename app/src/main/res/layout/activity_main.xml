@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_splash"
+    tools:context=".MainActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/toolbarRL"
+        android:padding="10dp"
+        android:background="@drawable/shap_rec1"
+        >
+
+        <ImageButton
+            android:id="@+id/logout_btn"
+            android:layout_width="30dp"
+            android:src="@drawable/logout_icon"
+            android:background="@null"
+            android:layout_alignParentEnd="true"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true" />
+
+
+
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:id="@+id/profileIv"
+            app:civ_border_color="#ffffff"
+            android:layout_marginEnd="10dp"
+            android:src="@drawable/ic_user"
+            app:civ_circle_background_color="#ffffff"
+            android:layout_marginRight="10dp" />
+        <TextView
+            android:id="@+id/nameTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Name"
+            android:textSize="15dp"
+            android:textStyle="bold"
+            android:layout_toEndOf="@id/profileIv"
+            android:textColor="#FFFFFF"
+            android:layout_toRightOf="@id/profileIv" />
+
+
+        <TextView
+            android:id="@+id/emailtv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Email"
+            android:textSize="15dp"
+
+            android:layout_below="@id/nameTV"
+            android:layout_toEndOf="@id/profileIv"
+            android:textColor="#FFFFFF"
+            android:layout_toRightOf="@id/profileIv" />
+        <TextView
+            android:id="@+id/phonenoTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Phone"
+            android:textSize="15dp"
+
+            android:layout_below="@id/emailtv"
+            android:layout_toEndOf="@id/profileIv"
+            android:textColor="#FFFFFF"
+            android:layout_toRightOf="@id/profileIv" />
+
+        <!--        Tabs -->
+
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_below="@id/toolbarRL"
+        android:layout_height="match_parent">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_weight="2"
+                android:layout_marginTop="10dp"
+                android:layout_height="200dp">
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardbox1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:layout_margin="16dp"
+                    app:cardCornerRadius="10dp"
+                    app:cardElevation="2dp">
+
+                    <ImageView
+                        android:id="@+id/box_1"
+                        android:layout_width="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_height="120dp"
+                        android:src="@drawable/lock_img"
+                        />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:textAlignment="center"
+                        android:textSize="20dp"
+                        android:textColor="@color/black"
+                        android:text="BOX 1"
+
+                        />
+
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardbox2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:layout_margin="16dp"
+                    app:cardCornerRadius="10dp"
+                    app:cardElevation="2dp">
+                    <ImageView
+                        android:id="@+id/box_2"
+                        android:layout_width="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_height="120dp"
+                        android:src="@drawable/lock_img"
+                        />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:textAlignment="center"
+                        android:textSize="20dp"
+                        android:textColor="@color/black"
+                        android:text="BOX 2"
+
+                        />
+
+
+
+                </androidx.cardview.widget.CardView>
+
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_weight="2"
+                android:layout_height="200dp">
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardbox3"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:layout_margin="16dp"
+                    app:cardCornerRadius="10dp"
+                    app:cardElevation="2dp">
+
+                    <ImageView
+                        android:id="@+id/box_3"
+                        android:layout_width="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_height="120dp"
+                        android:src="@drawable/lock_img"
+                        />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:textAlignment="center"
+                        android:textSize="20dp"
+                        android:textColor="@color/black"
+                        android:text="BOX 3"
+
+                        />
+
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardbox4"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:layout_margin="16dp"
+                    app:cardCornerRadius="10dp"
+                    app:cardElevation="2dp">
+                    <ImageView
+                        android:id="@+id/box_4"
+                        android:layout_width="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_height="120dp"
+                        android:src="@drawable/lock_img"
+                        />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:textAlignment="center"
+                        android:textSize="20dp"
+                        android:textColor="@color/black"
+                        android:text="BOX 4"
+
+                        />
+
+
+
+                </androidx.cardview.widget.CardView>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_weight="2"
+                android:layout_height="200dp">
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardbox5"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:layout_margin="16dp"
+                    app:cardCornerRadius="10dp"
+                    app:cardElevation="2dp">
+
+                    <ImageView
+                        android:id="@+id/box_5"
+                        android:layout_width="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_height="120dp"
+                        android:src="@drawable/lock_img"
+                        />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:textAlignment="center"
+                        android:textSize="20dp"
+                        android:textColor="@color/black"
+                        android:text="BOX 5"
+
+                        />
+
+                </androidx.cardview.widget.CardView>
+
+
+
+
+            </LinearLayout>
+
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                >
+                <com.google.android.material.button.MaterialButton
+                    style="@style/Widget.MaterialComponents.Button.Icon"
+                    android:id="@+id/qrcodescanner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:background="#AD1457"
+                    app:cornerRadius="2dp"
+
+                    android:layout_weight="1"
+                    android:layout_margin="20dp"
+                    android:onClick="showcam"
+                    app:icon="@drawable/qr_code_icon"
+                    app:iconGravity="textStart"
+                    android:text="Scan QR Code"
+                    />
+                <com.google.android.material.button.MaterialButton
+                    android:layout_width="wrap_content"
+                    app:icon="@drawable/controlaccessicon"
+                    app:iconGravity="textStart"
+                    android:layout_weight="1"
+                    android:layout_margin="20dp"
+                    android:onClick="controluser"
+                    android:background="#AD1457"
+                    android:textColor="@color/white"
+                    app:cornerRadius="2dp"
+                    android:layout_height="wrap_content"
+                    android:text="User Control"
+                    />
+
+
+            </LinearLayout>
+
+
+            <TextView
+                android:id="@+id/qrcodedata"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="invisible"
+                android:text="null"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.826"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/qrcodescanner" />
+
+
+
+        </LinearLayout>
+
+    </ScrollView>
+
+
+
+
+
+</RelativeLayout>

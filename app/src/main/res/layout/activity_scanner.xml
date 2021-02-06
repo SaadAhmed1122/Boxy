@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_splash"
+    tools:context=".ScannerAct">
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/barcode_animation"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:layout_marginTop="20dp"
+        app:lottie_autoPlay="true"
+
+        app:lottie_loop="true"
+        app:lottie_rawRes="@raw/barcode_animation"
+        />
+
+
+    <SurfaceView
+        android:id="@+id/cameraView"
+        android:layout_width="320dp"
+        android:layout_height="320dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginStart="48dp"
+        android:layout_marginLeft="48dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="54dp"
+        android:layout_below="@id/barcode_animation"
+        android:layout_marginRight="54dp" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_height="49dp"
+        android:layout_below="@id/cameraView"
+        android:layout_marginTop="49dp"
+        android:backgroundTint="@color/design_default_color_primary_dark"
+        android:gravity="center"
+        android:text="Point Camera Towards QR Code"
+        android:textAlignment="center"
+        android:textColor="#6A1B9A" />
+
+
+</RelativeLayout>
