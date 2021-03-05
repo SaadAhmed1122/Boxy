@@ -103,9 +103,9 @@ public class ScannerAct extends AppCompatActivity {
             public void release() {
 
             }
-
             @Override
             public void receiveDetections(Detector.Detections<Barcode> detections) {
+
                 final SparseArray<Barcode> barcode = detections.getDetectedItems();
                 if (barcode.size() > 0) {
                     Intent intent = new Intent();
@@ -150,6 +150,11 @@ public class ScannerAct extends AppCompatActivity {
         toneGenerator.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 200);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        finish();
+    }
 //    private void checkaccess(String data2) {
 //        DatabaseReference ref= FirebaseDatabase.getInstance().getReference("Users");
 ////        DatabaseReference ref2= FirebaseDatabase.getInstance().getReference("Users");

@@ -8,8 +8,9 @@
     tools:context=".UserConttol">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/usercontrlanimationView"
         android:layout_marginTop="10dp"
@@ -117,7 +118,7 @@
         android:layout_marginStart="10dp"
         android:layout_marginTop="110dp"
         android:textColor="@color/black"
-        android:text="TextView"
+        android:text="null"
         app:layout_constraintStart_toEndOf="@+id/textView7"
         app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
@@ -141,6 +142,7 @@
             android:layout_marginStart="60dp"
             android:layout_marginTop="32dp"
             android:layout_marginBottom="5dp"
+            android:onClick="fingeract"
             android:text="Fingerprint"
             app:icon="@drawable/fingericon"
             app:iconGravity="textStart"
@@ -164,6 +166,30 @@
             app:layout_constraintHorizontal_bias="0.947"
             app:layout_constraintStart_toEndOf="@+id/fingerbtn"
             app:layout_constraintTop_toBottomOf="@+id/facialregnitionbtn" />
+
+
+        <Switch
+            android:id="@+id/fingerswitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="77dp"
+            android:visibility="invisible"
+            android:onClick="fingerswitchclick"
+            app:layout_constraintBottom_toTopOf="@+id/fingerbtn"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/facialregnitionbtn"
+            app:layout_constraintVertical_bias="1.0" />
+
+        <Switch
+            android:id="@+id/faceswitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="facceswitchclick"
+            android:layout_marginStart="176dp"
+            app:layout_constraintBottom_toTopOf="@+id/facialregnitionbtn"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView7"
+            app:layout_constraintVertical_bias="1.0" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </ScrollView>

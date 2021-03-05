@@ -7,7 +7,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.boxy"
-        minSdkVersion 19
+        minSdkVersion 24
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
@@ -45,5 +45,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.2.1'
     implementation 'com.google.android.gms:play-services-vision:20.1.3'
     implementation "com.airbnb.android:lottie:$lottieVersion"
+    implementation 'com.journeyapps:zxing-android-embedded:4.1.0'
+    implementation "androidx.biometric:biometric:1.1.0"
 
 }

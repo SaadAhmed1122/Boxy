@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.USE_BIOMETRIC"/>
 
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
@@ -23,7 +24,10 @@
         android:roundIcon="@drawable/boxyicon"
         android:supportsRtl="true"
         android:theme="@style/Theme.Boxy">
-        <activity android:name=".UserConttol"></activity>
+        <activity android:name=".FingerprintAct"></activity>
+        <activity android:name=".TakingUserpermission" />
+        <activity android:name=".testscanner" />
+        <activity android:name=".UserConttol" />
         <activity android:name=".SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -34,8 +38,13 @@
         <activity android:name=".ScannerAct" />
         <activity android:name=".ForgetPass" />
         <activity android:name=".Register" />
-        <activity android:name=".Login"></activity>
+        <activity android:name=".Login" />
         <activity android:name=".MainActivity" />
+        <activity
+            android:name=".Capture"
+            android:screenOrientation="portrait"
+            android:stateNotNeeded="true"
+            android:theme="@style/zxing_CaptureTheme" />
     </application>
 
 </manifest>

@@ -26,6 +26,7 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.vision.barcode.Barcode;
+import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -87,8 +88,9 @@ public class MainActivity extends AppCompatActivity {
         databaseReference = FirebaseDatabase.getInstance().getReference("Doors");
         qrCodeData = findViewById(R.id.qrcodedata);
 
-        setUi();
         loadMyInfo();
+        setUi();
+
 
         logoutbtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -132,16 +134,20 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
-    private void checkUser() {
-//        FirebaseUser user= mAuth.getCurrentUser();
-        if(currentuser == null){
-            startActivity(new Intent(MainActivity.this, Login.class));
-            finish();
-        }
-        else{
-            loadMyInfo();
-        }
-    }
+
+
+//    private void checkUser() {
+////        FirebaseUser user= mAuth.getCurrentUser();
+//        if(currentuser == null){
+//            startActivity(new Intent(MainActivity.this, Login.class));
+//            finish();
+//        }
+//        else{
+//            loadMyInfo();
+//        }
+//    }
+
+
     private void loadMyInfo() {
         DatabaseReference ref= FirebaseDatabase.getInstance().getReference("Users");
         ref.orderByChild("uid").equalTo(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -223,332 +229,54 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
-            if (data != null) {
-                final Barcode barcode = data.getParcelableExtra("QRCODE");
-                qrCodeData.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        qrCodeData.setText( barcode.displayValue);
-                        Toast.makeText(MainActivity.this, "QR Code Scanned", Toast.LENGTH_SHORT).show();
-                        String data = barcode.displayValue.toString();
-
-                        if(qrCodeData.getText().toString().equals("null")){
-
-                        }
-                        else {
-//                            String data= qrCodeData.getText().toString();
-                            checkaccess(data);
-                        }
-
-
-//                        checkaccess(data);
-                        //Toast.makeText(MainActivity.this, "DAtaValue" + data, Toast.LENGTH_SHORT).show();
-
-                    }
-                });
-            }
-        }
-    }
-    private void checkaccess(String data2) {
-
-        DatabaseReference ref= FirebaseDatabase.getInstance().getReference("Users");
-//        DatabaseReference ref2= FirebaseDatabase.getInstance().getReference("Users");
-        ref.orderByChild("uid").equalTo(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot ds: snapshot.getChildren()){
-                    String ace= ""+ds.child("accessdoor").getValue();
-                   String aa= qrCodeData.getText().toString();
-
-                    if(!(aa.equals("null"))){
-                        if(ace.equals("null")){
-//                        matchdata(data2);
-                            checkdata(data2);
-                        }
-                        else{
-                            Toast.makeText(MainActivity.this, "You Already have a door.", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-
-                }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
-    }
-
-    private void checkdata(String data2) {
-        String qrvalue= qrCodeData.getText().toString();
-
-
-        if(qrvalue.equals("door1")){
-            databaseReference.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    String value2 = snapshot.child("door1").child("ava").getValue().toString();
-                    if(value2.equals("true")) {
-                        Toast.makeText(MainActivity.this, "Box No 1 is Available", Toast.LENGTH_SHORT).show();
-                    }
-                    else{
-                        Toast.makeText(MainActivity.this, "Box No 1 is not Available", Toast.LENGTH_SHORT).show();
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
-                }
-            });
-
-
-        }
-        else if(qrvalue.equals("door2")){
-            databaseReference.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    String value2 = snapshot.child("door2").child("ava").getValue().toString();
-
-                    if(value2.equals("true"))
-                    {
-                        Toast.makeText(MainActivity.this, "Lock No 2 is Available", Toast.LENGTH_SHORT).show();
-                        
-                        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-// Add the buttons
-                        builder.setMessage("Did you went to get this Lock.");
-
-                        builder.setCancelable(true);
-                        builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                HashMap<String,Object> hashMap2 = new HashMap<>();
-                                HashMap<String, Object> hasMapuser =new HashMap<>();
-                                HashMap<String,Object> hashMap= new HashMap<>();
-                                hashMap.put("ava","false");
-                                hasMapuser.put("accessdoor","door2");
-                                hashMap2.put("facial_recognition",0);
-                                hashMap2.put("FingerSensor",0);
-                                hashMap2.put("accessdoor","door2");
-                                hashMap2.put("uid",mAuth.getUid());
-
-                                databaseReference.child("door2").child("uid").setValue(hashMap2).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        databaseReference.child("door2").updateChildren(hashMap);
-                                    }
-                                }).addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Toast.makeText(MainActivity.this, "Data Insertion Failed"+e.getMessage(), Toast.LENGTH_SHORT).show();
-                                    }
-                                });
-                                DatabaseReference myRef= FirebaseDatabase.getInstance().getReference("Users");
-                                myRef.child(mAuth.getUid()).updateChildren(hasMapuser);
-//                                databaseReference.child("door2").child("uid").setValue(hashMap);
-                                Toast.makeText(MainActivity.this, "Data Saved", Toast.LENGTH_SHORT).show();
-                                qrCodeData.setText("null");
-                                dialog.dismiss();
-                                showmsg();
-                            }
-                        });
-                        builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                // User cancelled the dialog
-                           dialog.dismiss();
-                            }
-
-                        });
-// Set other dialog properties
-
-
-// Create the AlertDialog
-                        AlertDialog dialog = builder.create();
-                        dialog.show();
-
-                    }
-                    else{
-                        Toast.makeText(MainActivity.this, "Box No 2 is not Available", Toast.LENGTH_SHORT).show();
-                        progressDialog.dismiss();
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
-                }
-            });
-        }
-        else if(qrvalue.equals("door3")){
-            databaseReference.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    String value2 = snapshot.child("door3").child("ava").getValue().toString();
-                    if(value2.equals("true")) {
-                        Toast.makeText(MainActivity.this, "Box No 3 is Available", Toast.LENGTH_SHORT).show();
-                    }
-                    else{
-                        Toast.makeText(MainActivity.this, "Box No 3 is not Available", Toast.LENGTH_SHORT).show();
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
-                }
-            });
-
-
-        }
-        else if(qrvalue.equals("door4")){
-            databaseReference.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    String value2 = snapshot.child("door4").child("ava").getValue().toString();
-                    if(value2.equals("true")) {
-                        Toast.makeText(MainActivity.this, "Box No 4 is Available", Toast.LENGTH_SHORT).show();
-                    }
-                    else{
-                        Toast.makeText(MainActivity.this, "Box No 4 is not Available", Toast.LENGTH_SHORT).show();
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
-                }
-            });
-
-
-        }
-        else if(qrvalue.equals("door5")){
-            databaseReference.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    String value2 = snapshot.child("door5").child("ava").getValue().toString();
-                    if(value2.equals("true")) {
-                        Toast.makeText(MainActivity.this, "Box No 5 is Available", Toast.LENGTH_SHORT).show();
-                    }
-                    else{
-                        Toast.makeText(MainActivity.this, "Box No 5 is not Available", Toast.LENGTH_SHORT).show();
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
-                }
-            });
-
-
-        }
-
-        else{
-            Toast.makeText(MainActivity.this, "QR Code is not matched", Toast.LENGTH_SHORT).show();
-
-        }
-    }
-
-    private void showmsg() {
-        Toast.makeText(this, "Done", Toast.LENGTH_SHORT).show();
-    }
-
-//    private void matchdata(String data) {
-//        databaseReference.addValueEventListener(new ValueEventListener() {
-//            int check=0,check2=0;
+////    @Override
+////    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+////        super.onActivityResult(requestCode, resultCode, data);
+////        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
+////            if (data != null) {
+////                final Barcode barcode = data.getParcelableExtra("QRCODE");
+////                qrCodeData.post(new Runnable() {
+////                    @Override
+////                    public void run() {
+////                        qrCodeData.setText( barcode.displayValue);
+////                        Toast.makeText(MainActivity.this, "QR Code Scanned", Toast.LENGTH_SHORT).show();
+////                        String data = qrCodeData.getText().toString();
+////
+////                        if(qrCodeData.getText().toString().equals("null")){
+////                        }
+////                        else {
+//////                            String data= qrCodeData.getText().toString();
+////                            checkaccess(data);
+////                        }
+//////                        checkaccess(data);
+////                        //Toast.makeText(MainActivity.this, "DAtaValue" + data, Toast.LENGTH_SHORT).show();
+////
+////                    }
+////                });
+////            }
+////        }
+////    }
+//    private void checkaccess(String data2) {
+//
+//        DatabaseReference ref= FirebaseDatabase.getInstance().getReference("Users");
+////        DatabaseReference ref2= FirebaseDatabase.getInstance().getReference("Users");
+//        ref.orderByChild("uid").equalTo(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
 //            @Override
 //            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                try {
-//                    for (int i = 1; i < 6; i++) {
-//                        String value = snapshot.child("door" + i).child("qrcode").getValue().toString();
-//                        String value2 = snapshot.child("door" + i).child("ava").getValue().toString();
-//                       // String available = snapshot.child("door" + i).child("Availability").getValue().toString();
-//                        if (value.equals(data)) {
-//                            Toast.makeText(MainActivity.this, "QR Code Matched", Toast.LENGTH_SHORT).show();
-//                            if (value2.equals("true")) {
-//                                Toast.makeText(MainActivity.this, "Box No:" + i + "is Available", Toast.LENGTH_SHORT).show();
-//                                check = i;
-//                                check2=1;
-//                                showdialogbox(i);
-//                                AlertDialog.Builder builder1 = new AlertDialog.Builder(MainActivity.this);
-//                                builder1.setMessage("Did you went to get this box.");
-//
-//                                builder1.setCancelable(true);
-//
-//                                builder1.setPositiveButton(
-//                                        "Yes",
-//                                        new DialogInterface.OnClickListener() {
-//                                            public void onClick(DialogInterface dialog, int id) {
-//
-//                                                HashMap<String,Object> hashMap2 = new HashMap<>();
-//                                                HashMap<String, Object> hasMapuser =new HashMap<>();
-//                                                HashMap<String,Object> hashMap= new HashMap<>();
-//                                                hashMap.put("ava","false");
-//                                                hasMapuser.put("accessdoor","door"+check);
-//                                                hashMap2.put("facial_recognition",0);
-//                                                hashMap2.put("FingerSensor",0);
-//                                                hashMap2.put("accessdoor","door"+check);
-//                                                hashMap2.put("uid",mAuth.getUid());
-//
-//                                                databaseReference.child("door"+check).child("uid").setValue(hashMap2).addOnSuccessListener(new OnSuccessListener<Void>() {
-//                                                    @Override
-//                                                    public void onSuccess(Void aVoid) {
-//                                                        databaseReference.child("door"+check).updateChildren(hashMap);
-//                                                        dialog.dismiss();
-//                                                        savee++;
-//                                                    }
-//                                                }).addOnFailureListener(new OnFailureListener() {
-//                                                    @Override
-//                                                    public void onFailure(@NonNull Exception e) {
-//                                                        Toast.makeText(MainActivity.this, "Data Insertion Failed"+e.getMessage(), Toast.LENGTH_SHORT).show();
-//                                                        dialog.cancel();
-//                                                    }
-//                                                });
-//                                                DatabaseReference myRef= FirebaseDatabase.getInstance().getReference("Users");
-//                                                myRef.child(mAuth.getUid()).updateChildren(hasMapuser);
-//                        databaseReference.child("door"+check).child("uid").setValue(hashMap);
-//
-////                        databaseReference.child("door"+i).child("uid").child("facial_recognition").setValue(0);
-////                        databaseReference.child("door"+i).child("uid").child("FingerSensor").setValue(0);
-////                        databaseReference.child("door"+i).child("uid").child("accessdoor").setValue("door"+i);
-////
-//                                                if(savee == 1){
-//                                                    Toast.makeText(MainActivity.this, "Data Saved", Toast.LENGTH_SHORT).show();
-//                                                    dialog.dismiss();
-//                                                    dialog.cancel();
-//                                                }
-//                                            }
-//                                        });
-//
-//                                builder1.setNegativeButton(
-//                                        "No",
-//                                        new DialogInterface.OnClickListener() {
-//                                            public void onClick(DialogInterface dialog, int id) {
-//                                                dialog.cancel();
-//                                            }
-//                                        });
-////
-//                                AlertDialog alert11 = builder1.create();
-//                                alert11.show();
-//                                break;
-//                            } else {
-//                                Toast.makeText(MainActivity.this, "This Box is not Available", Toast.LENGTH_SHORT).show();
-//                            }
-//                            break;
+//                for(DataSnapshot ds: snapshot.getChildren()){
+//                    String ace= ""+ds.child("accessdoor").getValue();
+//                   String aa= qrCodeData.getText().toString();
+//                    if(!(aa.equals("null"))){
+//                        if(ace.equals("null")){
+////                        matchdata(data2);
+//                            checkdata(data2);
 //                        }
-//
+//                        else{
+//                            Toast.makeText(MainActivity.this, "You Already have a door.", Toast.LENGTH_SHORT).show();
+//                        }
 //                    }
-//                    if (check2 == 0) {
-//                        Toast.makeText(MainActivity.this, "Value Not Matched", Toast.LENGTH_SHORT).show();
-//                    }
 //
-//                }catch (Exception aa){
-//                    Toast.makeText(MainActivity.this, ""+aa.getMessage(), Toast.LENGTH_SHORT).show();
+//
 //                }
 //            }
 //            @Override
@@ -556,102 +284,377 @@ public class MainActivity extends AppCompatActivity {
 //
 //            }
 //        });
+//
 //    }
 //
-//    private void showdialogbox(int i) {
-//        AlertDialog.Builder builder1 = new AlertDialog.Builder(MainActivity.this);
-//        builder1.setMessage("Did you went to get this box.");
-//        builder1.setCancelable(true);
-//        builder1.setPositiveButton(
-//                "Yes",
-//                new DialogInterface.OnClickListener() {
-//                    public void onClick(DialogInterface dialog, int id) {
+//    private void checkdata(String data2) {
+//        String qrvalue= qrCodeData.getText().toString();
 //
-//                        HashMap<String,Object> hashMap2 = new HashMap<>();
-//                        HashMap<String, Object> hasMapuser =new HashMap<>();
-//                        HashMap<String,Object> hashMap= new HashMap<>();
-//                        hashMap.put("ava","false");
-//                        hasMapuser.put("accessdoor","door"+i);
-//                        hashMap2.put("facial_recognition",0);
-//                        hashMap2.put("FingerSensor",0);
-//                        hashMap2.put("accessdoor","door"+i);
-//                        hashMap2.put("uid",mAuth.getUid());
+//        if(qrvalue.equals("door1")){
+//            databaseReference.addValueEventListener(new ValueEventListener() {
+//                @Override
+//                public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                    String value2 = snapshot.child("door1").child("ava").getValue().toString();
+//                    if(value2.equals("true")) {
+//                        Toast.makeText(MainActivity.this, "Box No 1 is Available", Toast.LENGTH_SHORT).show();
+//                    }
+//                    else{
+//                        Toast.makeText(MainActivity.this, "Box No 1 is not Available", Toast.LENGTH_SHORT).show();
+//                    }
+//                }
 //
-//                        databaseReference.child("door"+i).child("uid").setValue(hashMap2).addOnSuccessListener(new OnSuccessListener<Void>() {
-//                            @Override
-//                            public void onSuccess(Void aVoid) {
-//                                databaseReference.child("door"+i).updateChildren(hashMap);
+//                @Override
+//                public void onCancelled(@NonNull DatabaseError error) {
+//
+//                }
+//            });
+//
+//
+//        }
+//        else if(qrvalue.equals("door2")){
+//            databaseReference.addValueEventListener(new ValueEventListener() {
+//                @Override
+//                public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                    String value2 = snapshot.child("door2").child("ava").getValue().toString();
+//
+//                    if(value2.equals("true"))
+//                    {
+//                        Toast.makeText(MainActivity.this, "Lock No 2 is Available", Toast.LENGTH_SHORT).show();
+//
+//                        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+//// Add the buttons
+//                        builder.setMessage("Did you went to get this Lock.");
+//
+//                        builder.setCancelable(true);
+//                        builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+//                            public void onClick(DialogInterface dialog, int id) {
+//                                HashMap<String,Object> hashMap2 = new HashMap<>();
+//                                HashMap<String, Object> hasMapuser =new HashMap<>();
+//                                HashMap<String,Object> hashMap= new HashMap<>();
+//                                hashMap.put("ava","false");
+//                                hasMapuser.put("accessdoor","door2");
+//                                hashMap2.put("facial_recognition",0);
+//                                hashMap2.put("FingerSensor",0);
+//                                hashMap2.put("accessdoor","door2");
+//                                hashMap2.put("uid",mAuth.getUid());
+//
+//                                databaseReference.child("door2").child("uid").setValue(hashMap2).addOnSuccessListener(new OnSuccessListener<Void>() {
+//                                    @Override
+//                                    public void onSuccess(Void aVoid) {
+//                                        databaseReference.child("door2").updateChildren(hashMap);
+//                                    }
+//                                }).addOnFailureListener(new OnFailureListener() {
+//                                    @Override
+//                                    public void onFailure(@NonNull Exception e) {
+//                                        Toast.makeText(MainActivity.this, "Data Insertion Failed"+e.getMessage(), Toast.LENGTH_SHORT).show();
+//                                    }
+//                                });
+//                                DatabaseReference myRef= FirebaseDatabase.getInstance().getReference("Users");
+//                                myRef.child(mAuth.getUid()).updateChildren(hasMapuser);
+////                                databaseReference.child("door2").child("uid").setValue(hashMap);
+//                                Toast.makeText(MainActivity.this, "Data Saved", Toast.LENGTH_SHORT).show();
+//                                qrCodeData.setText("null");
 //                                dialog.dismiss();
-//                                savee++;
-//                                }
-//                        }).addOnFailureListener(new OnFailureListener() {
-//                            @Override
-//                            public void onFailure(@NonNull Exception e) {
-//                                Toast.makeText(MainActivity.this, "Data Insertion Failed"+e.getMessage(), Toast.LENGTH_SHORT).show();
-//                                dialog.cancel();
+////                                showmsg();
 //                            }
 //                        });
-//                        DatabaseReference myRef= FirebaseDatabase.getInstance().getReference("Users");
-//                        myRef.child(mAuth.getUid()).updateChildren(hasMapuser);
-//                        Toast.makeText(MainActivity.this, "Data Saved", Toast.LENGTH_SHORT).show();
-//                        dialog.dismiss();
-//                        dialog.cancel();
-////                        databaseReference.child("door"+i).child("uid").setValue(hashMap);
+//                        builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+//                            public void onClick(DialogInterface dialog, int id) {
+//                                // User cancelled the dialog
+//                           dialog.dismiss();
+//                            }
 //
-////                        databaseReference.child("door"+i).child("uid").child("facial_recognition").setValue(0);
-////                        databaseReference.child("door"+i).child("uid").child("FingerSensor").setValue(0);
-////                        databaseReference.child("door"+i).child("uid").child("accessdoor").setValue("door"+i);
-////
-//                        if(savee == 1){
+//                        });
+//// Set other dialog properties
 //
-//                        }
-//                        }
-//                });
 //
-//        builder1.setNegativeButton(
-//                "No",
-//                new DialogInterface.OnClickListener() {
-//                    public void onClick(DialogInterface dialog, int id) {
-//                        dialog.cancel();
+//// Create the AlertDialog
+//                        AlertDialog dialog = builder.create();
+//                        dialog.show();
+//
 //                    }
-//                });
+//                    else{
+//                        Toast.makeText(MainActivity.this, "Box No 2 is not Available", Toast.LENGTH_SHORT).show();
+//                        progressDialog.dismiss();
+//                    }
+//                }
+//
+//                @Override
+//                public void onCancelled(@NonNull DatabaseError error) {
+//
+//                }
+//            });
+//        }
+//        else if(qrvalue.equals("door3")){
+//            databaseReference.addValueEventListener(new ValueEventListener() {
+//                @Override
+//                public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                    String value2 = snapshot.child("door3").child("ava").getValue().toString();
+//                    if(value2.equals("true")) {
+//                        Toast.makeText(MainActivity.this, "Box No 3 is Available", Toast.LENGTH_SHORT).show();
+//                    }
+//                    else{
+//                        Toast.makeText(MainActivity.this, "Box No 3 is not Available", Toast.LENGTH_SHORT).show();
+//                    }
+//                }
+//
+//                @Override
+//                public void onCancelled(@NonNull DatabaseError error) {
+//
+//                }
+//            });
+//
+//
+//        }
+//        else if(qrvalue.equals("door4")){
+//            databaseReference.addValueEventListener(new ValueEventListener() {
+//                @Override
+//                public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                    String value2 = snapshot.child("door4").child("ava").getValue().toString();
+//                    if(value2.equals("true")) {
+//                        Toast.makeText(MainActivity.this, "Box No 4 is Available", Toast.LENGTH_SHORT).show();
+//                    }
+//                    else{
+//                        Toast.makeText(MainActivity.this, "Box No 4 is not Available", Toast.LENGTH_SHORT).show();
+//                    }
+//                }
+//
+//                @Override
+//                public void onCancelled(@NonNull DatabaseError error) {
+//
+//                }
+//            });
+//
+//
+//        }
+//        else if(qrvalue.equals("door5")){
+//            databaseReference.addValueEventListener(new ValueEventListener() {
+//                @Override
+//                public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                    String value2 = snapshot.child("door5").child("ava").getValue().toString();
+//                    if(value2.equals("true")) {
+//                        Toast.makeText(MainActivity.this, "Box No 5 is Available", Toast.LENGTH_SHORT).show();
+//                    }
+//                    else{
+//                        Toast.makeText(MainActivity.this, "Box No 5 is not Available", Toast.LENGTH_SHORT).show();
+//                    }
+//                }
+//
+//                @Override
+//                public void onCancelled(@NonNull DatabaseError error) {
+//
+//                }
+//            });
+//
+//
+//        }
+//
+//        else{
+//            Toast.makeText(MainActivity.this, "QR Code is not matched", Toast.LENGTH_SHORT).show();
+//
+//        }
+//    }
+//
+////    private void showmsg() {
+////        Toast.makeText(this, "Done", Toast.LENGTH_SHORT).show();
+////    }
+//
+////    private void matchdata(String data) {
+////        databaseReference.addValueEventListener(new ValueEventListener() {
+////            int check=0,check2=0;
+////            @Override
+////            public void onDataChange(@NonNull DataSnapshot snapshot) {
+////                try {
+////                    for (int i = 1; i < 6; i++) {
+////                        String value = snapshot.child("door" + i).child("qrcode").getValue().toString();
+////                        String value2 = snapshot.child("door" + i).child("ava").getValue().toString();
+////                       // String available = snapshot.child("door" + i).child("Availability").getValue().toString();
+////                        if (value.equals(data)) {
+////                            Toast.makeText(MainActivity.this, "QR Code Matched", Toast.LENGTH_SHORT).show();
+////                            if (value2.equals("true")) {
+////                                Toast.makeText(MainActivity.this, "Box No:" + i + "is Available", Toast.LENGTH_SHORT).show();
+////                                check = i;
+////                                check2=1;
+////                                showdialogbox(i);
+////                                AlertDialog.Builder builder1 = new AlertDialog.Builder(MainActivity.this);
+////                                builder1.setMessage("Did you went to get this box.");
 ////
-////        AlertDialog alert11 = builder1.create();
-////        alert11.show();
+////                                builder1.setCancelable(true);
+////
+////                                builder1.setPositiveButton(
+////                                        "Yes",
+////                                        new DialogInterface.OnClickListener() {
+////                                            public void onClick(DialogInterface dialog, int id) {
+////
+////                                                HashMap<String,Object> hashMap2 = new HashMap<>();
+////                                                HashMap<String, Object> hasMapuser =new HashMap<>();
+////                                                HashMap<String,Object> hashMap= new HashMap<>();
+////                                                hashMap.put("ava","false");
+////                                                hasMapuser.put("accessdoor","door"+check);
+////                                                hashMap2.put("facial_recognition",0);
+////                                                hashMap2.put("FingerSensor",0);
+////                                                hashMap2.put("accessdoor","door"+check);
+////                                                hashMap2.put("uid",mAuth.getUid());
+////
+////                                                databaseReference.child("door"+check).child("uid").setValue(hashMap2).addOnSuccessListener(new OnSuccessListener<Void>() {
+////                                                    @Override
+////                                                    public void onSuccess(Void aVoid) {
+////                                                        databaseReference.child("door"+check).updateChildren(hashMap);
+////                                                        dialog.dismiss();
+////                                                        savee++;
+////                                                    }
+////                                                }).addOnFailureListener(new OnFailureListener() {
+////                                                    @Override
+////                                                    public void onFailure(@NonNull Exception e) {
+////                                                        Toast.makeText(MainActivity.this, "Data Insertion Failed"+e.getMessage(), Toast.LENGTH_SHORT).show();
+////                                                        dialog.cancel();
+////                                                    }
+////                                                });
+////                                                DatabaseReference myRef= FirebaseDatabase.getInstance().getReference("Users");
+////                                                myRef.child(mAuth.getUid()).updateChildren(hasMapuser);
+////                        databaseReference.child("door"+check).child("uid").setValue(hashMap);
+////
+//////                        databaseReference.child("door"+i).child("uid").child("facial_recognition").setValue(0);
+//////                        databaseReference.child("door"+i).child("uid").child("FingerSensor").setValue(0);
+//////                        databaseReference.child("door"+i).child("uid").child("accessdoor").setValue("door"+i);
+//////
+////                                                if(savee == 1){
+////                                                    Toast.makeText(MainActivity.this, "Data Saved", Toast.LENGTH_SHORT).show();
+////                                                    dialog.dismiss();
+////                                                    dialog.cancel();
+////                                                }
+////                                            }
+////                                        });
+////
+////                                builder1.setNegativeButton(
+////                                        "No",
+////                                        new DialogInterface.OnClickListener() {
+////                                            public void onClick(DialogInterface dialog, int id) {
+////                                                dialog.cancel();
+////                                            }
+////                                        });
+//////
+////                                AlertDialog alert11 = builder1.create();
+////                                alert11.show();
+////                                break;
+////                            } else {
+////                                Toast.makeText(MainActivity.this, "This Box is not Available", Toast.LENGTH_SHORT).show();
+////                            }
+////                            break;
+////                        }
+////
+////                    }
+////                    if (check2 == 0) {
+////                        Toast.makeText(MainActivity.this, "Value Not Matched", Toast.LENGTH_SHORT).show();
+////                    }
+////
+////                }catch (Exception aa){
+////                    Toast.makeText(MainActivity.this, ""+aa.getMessage(), Toast.LENGTH_SHORT).show();
+////                }
+////            }
+////            @Override
+////            public void onCancelled(@NonNull DatabaseError error) {
+////
+////            }
+////        });
+////    }
+////
+////    private void showdialogbox(int i) {
+////        AlertDialog.Builder builder1 = new AlertDialog.Builder(MainActivity.this);
+////        builder1.setMessage("Did you went to get this box.");
+////        builder1.setCancelable(true);
+////        builder1.setPositiveButton(
+////                "Yes",
+////                new DialogInterface.OnClickListener() {
+////                    public void onClick(DialogInterface dialog, int id) {
+////
+////                        HashMap<String,Object> hashMap2 = new HashMap<>();
+////                        HashMap<String, Object> hasMapuser =new HashMap<>();
+////                        HashMap<String,Object> hashMap= new HashMap<>();
+////                        hashMap.put("ava","false");
+////                        hasMapuser.put("accessdoor","door"+i);
+////                        hashMap2.put("facial_recognition",0);
+////                        hashMap2.put("FingerSensor",0);
+////                        hashMap2.put("accessdoor","door"+i);
+////                        hashMap2.put("uid",mAuth.getUid());
+////
+////                        databaseReference.child("door"+i).child("uid").setValue(hashMap2).addOnSuccessListener(new OnSuccessListener<Void>() {
+////                            @Override
+////                            public void onSuccess(Void aVoid) {
+////                                databaseReference.child("door"+i).updateChildren(hashMap);
+////                                dialog.dismiss();
+////                                savee++;
+////                                }
+////                        }).addOnFailureListener(new OnFailureListener() {
+////                            @Override
+////                            public void onFailure(@NonNull Exception e) {
+////                                Toast.makeText(MainActivity.this, "Data Insertion Failed"+e.getMessage(), Toast.LENGTH_SHORT).show();
+////                                dialog.cancel();
+////                            }
+////                        });
+////                        DatabaseReference myRef= FirebaseDatabase.getInstance().getReference("Users");
+////                        myRef.child(mAuth.getUid()).updateChildren(hasMapuser);
+////                        Toast.makeText(MainActivity.this, "Data Saved", Toast.LENGTH_SHORT).show();
+////                        dialog.dismiss();
+////                        dialog.cancel();
+//////                        databaseReference.child("door"+i).child("uid").setValue(hashMap);
+////
+//////                        databaseReference.child("door"+i).child("uid").child("facial_recognition").setValue(0);
+//////                        databaseReference.child("door"+i).child("uid").child("FingerSensor").setValue(0);
+//////                        databaseReference.child("door"+i).child("uid").child("accessdoor").setValue("door"+i);
+//////
+////                        if(savee == 1){
+////
+////                        }
+////                        }
+////                });
+////
+////        builder1.setNegativeButton(
+////                "No",
+////                new DialogInterface.OnClickListener() {
+////                    public void onClick(DialogInterface dialog, int id) {
+////                        dialog.cancel();
+////                    }
+////                });
+//////
+//////        AlertDialog alert11 = builder1.create();
+//////        alert11.show();
+////    }
+//
+//
+//    private void checkcondition() {
+//        myRef.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                for (int i = 1; i < 6; i++) {
+//
+//                    boolean queries = myRef.child("door" + i).equals(qrvalue);
+//                    if (queries) {
+//                        Toast.makeText(MainActivity.this, "qr Match to box" + i, Toast.LENGTH_SHORT).show();
+//                    }
+////                    if(qrvalue ==  Map<String, Object> snapshot.child("door"+i).getValue()){
+////                        Toast.makeText(MainActivity.this, "This is match", Toast.LENGTH_SHORT).show();
+////                    }
+//                    Map<String, Object> map = (Map<String, Object>) snapshot.child("door" + i).getValue();
+//                    //Toast.makeText(MainActivity.this, "" + map, Toast.LENGTH_SHORT).show();
+//                }
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
+//
 //    }
 
 
-    private void checkcondition() {
-        myRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (int i = 1; i < 6; i++) {
-
-                    boolean queries = myRef.child("door" + i).equals(qrvalue);
-                    if (queries) {
-                        Toast.makeText(MainActivity.this, "qr Match to box" + i, Toast.LENGTH_SHORT).show();
-                    }
-//                    if(qrvalue ==  Map<String, Object> snapshot.child("door"+i).getValue()){
-//                        Toast.makeText(MainActivity.this, "This is match", Toast.LENGTH_SHORT).show();
-//                    }
-                    Map<String, Object> map = (Map<String, Object>) snapshot.child("door" + i).getValue();
-                    //Toast.makeText(MainActivity.this, "" + map, Toast.LENGTH_SHORT).show();
-                }
-
-            }
-
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
-    }
-
     public void showcam(View view) {
-        Intent intent = new Intent(MainActivity.this, ScannerAct.class);
-        startActivityForResult(intent, REQUEST_CODE);
+
+        startActivity(new Intent(MainActivity.this,testscanner.class));
+//        Intent intent = new Intent(MainActivity.this, ScannerAct.class);
+//        startActivityForResult(intent, REQUEST_CODE);
 
     }
     @Override
