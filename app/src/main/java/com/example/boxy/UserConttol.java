@@ -29,6 +29,7 @@ public class UserConttol extends AppCompatActivity {
     TextView username,email,phone,accessdoor;
     FirebaseAuth mAuth;
     Switch faceswitch,fingerswitch;
+    String a;
     MaterialButton faceregbtn,fingerbtn,releasebtn;
     DatabaseReference databaseReference,ref2;
 
@@ -47,6 +48,7 @@ public class UserConttol extends AppCompatActivity {
         fingerswitch =findViewById(R.id.fingerswitch);
         releasebtn = findViewById(R.id.releasebtn);
         loadMyInfo();
+
         ref2= FirebaseDatabase.getInstance().getReference("Doors");
 
 
