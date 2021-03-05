@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="@drawable/bg_splash"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    tools:context=".FingerprintAct">
+
+
+    <TextView
+        android:id="@+id/txtt"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:text="Use your Finger print to open the door"
+        />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_gravity="center"
+        android:layout_marginTop="30dp"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="154dp"
+        app:srcCompat="@drawable/fingerprintlogo" />
+
+    <Button
+        android:id="@+id/scanfinger"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAllCaps="true"
+        android:layout_marginTop="20dp"
+        android:text="Scan"
+        />
+
+ <LinearLayout
+     android:id="@+id/layoutdoor"
+     android:layout_width="match_parent"
+     android:gravity="center"
+     android:visibility="invisible"
+     android:layout_marginTop="20dp"
+     android:layout_height="wrap_content">
+
+     <Button
+         android:id="@+id/openlockbtn"
+         android:layout_width="wrap_content"
+         android:onClick="opendoor"
+         android:layout_height="wrap_content"
+         android:layout_marginRight="30dp"
+         android:text="Open Lock"
+         />
+     <Button
+         android:id="@+id/closelockbtn"
+         android:layout_width="wrap_content"
+         android:layout_marginLeft="20dp"
+         android:onClick="closedoor"
+         android:layout_height="wrap_content"
+         android:text="Close Lock"
+         />
+
+
+
+ </LinearLayout>
+
+
+</LinearLayout>
